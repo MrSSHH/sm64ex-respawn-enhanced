@@ -1,5 +1,5 @@
 -- name: PISS on the MOON knockback
--- description: THIS MODE IS PISSING ON THE MOON
+-- description: THIS MOD IS PISSING ON THE MOON
 gServerSettings.playerKnockbackStrength = 3000
 
 local function isempty(s)
