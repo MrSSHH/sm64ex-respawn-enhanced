@@ -1,5 +1,6 @@
 -- name: PISS on the MOON knockback
--- description: THIS MOD IS PISSING ON THE MOON
+-- description: THIS MODE IS PISSING ON THE MOON
+
 gServerSettings.playerKnockbackStrength = 3000
 
 local function isempty(s)
@@ -48,6 +49,26 @@ function set_respawn_flag(switchState)
     return false
 end
 
+function set_knockback_value(newValue)
+    if isempty(newValue) then
+        djui_chat_message_create('Current knockback: ' .. gServerSettings.playerKnockbackStrength)
+        return true
+    end
+    
+    local value = tonumber(newValue)
+    if value == nil then
+        djui_chat_message_create('Error: knockback value must be a number')
+        return false
+    end
+    
+    -- Clamp between 0 and 15000
+    value = math.max(0, math.min(15000, value))
+    gServerSettings.playerKnockbackStrength = value
+    
+    djui_chat_message_create('Knockback set to ' .. value .. '. Prepare for liftoff!')
+    return true
+end
+
 function on_respawn_flag_changed(tag, oldVal, newVal)
     if gGlobalSyncTable.respawn_flag then
         djui_chat_message_create('The Pussy ass Admin activated the spawn cheat')
@@ -59,6 +80,7 @@ end
 if network_is_server() then
     gGlobalSyncTable.respawn_flag = false
     hook_chat_command('spawn', '<on OR off> Remembers the spawn point', set_respawn_flag)
+    hook_chat_command('knockback', '<value> Set knockback strength (0-15000)', set_knockback_value)
 end
 
 hook_event(HOOK_MARIO_UPDATE, on_update_frame)
